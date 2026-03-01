@@ -7,7 +7,7 @@
   <style>
     :root {
       --negro: #000;
-      --naranja: #ff9f1c;
+      --morado-oscuro: #2a0a42;
       --verde-boton: #2dc653;
       --petalo-amarillo: #ffd94d;
       --texto: #fff;
@@ -73,7 +73,7 @@
     }
 
     .scene {
-      background: var(--naranja);
+      background: radial-gradient(circle at 50% 20%, #3a1360 0%, var(--morado-oscuro) 55%, #180327 100%);
       opacity: 0;
       pointer-events: none;
       z-index: 1;
@@ -92,12 +92,9 @@
     }
 
     .bouquet {
+      position: relative;
       width: min(92vw, 900px);
-      height: min(64vh, 520px);
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      gap: clamp(0.35rem, 1.6vw, 1rem);
+      height: min(68vh, 560px);
       transform: translateY(120%);
       transition: transform 1.7s cubic-bezier(0.22, 1, 0.36, 1);
       filter: drop-shadow(0 18px 10px rgba(0, 0, 0, 0.2));
@@ -108,19 +105,24 @@
     }
 
     .flower {
-      position: relative;
-      width: clamp(72px, 9vw, 110px);
+      --angle: 0deg;
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      width: clamp(62px, 8vw, 92px);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-end;
+      transform-origin: bottom center;
+      transform: translateX(-50%) rotate(var(--angle));
       animation: sway 3.6s ease-in-out infinite;
       animation-delay: calc(var(--i) * -0.25s);
     }
 
     .stem {
-      width: 8px;
-      height: clamp(180px, 30vh, 300px);
+      width: 7px;
+      height: var(--stem-height, clamp(200px, 34vh, 320px));
       background: linear-gradient(to bottom, #338445, #206030);
       border-radius: 999px;
       margin-top: -4px;
@@ -156,8 +158,8 @@
     .petal {
       position: absolute;
       top: -10vh;
-      width: 16px;
-      height: 24px;
+      width: 22px;
+      height: 32px;
       border-radius: 65% 35% 70% 30% / 45% 65% 35% 55%;
       background: radial-gradient(circle at 30% 25%, #fff2a8 0 28%, var(--petalo-amarillo) 50%, #eab308 100%);
       opacity: 0;
@@ -173,8 +175,8 @@
 
     @keyframes sway {
       0%,
-      100% { transform: rotate(-2.5deg); }
-      50% { transform: rotate(2.5deg); }
+      100% { transform: translateX(-50%) rotate(calc(var(--angle) - 2.2deg)); }
+      50% { transform: translateX(-50%) rotate(calc(var(--angle) + 2.2deg)); }
     }
 
     @keyframes fall {
@@ -196,14 +198,14 @@
   <section class="screen scene" id="scene">
     <div class="petal-rain" id="petalRain" aria-hidden="true"></div>
     <div class="bouquet" id="bouquet" aria-label="Ramo de girasoles">
-      <div class="flower" style="--i: 1"><div class="sunflower"></div><div class="stem"></div></div>
-      <div class="flower" style="--i: 2"><div class="sunflower"></div><div class="stem"></div></div>
-      <div class="flower" style="--i: 3"><div class="sunflower"></div><div class="stem"></div></div>
-      <div class="flower" style="--i: 4"><div class="sunflower"></div><div class="stem"></div></div>
-      <div class="flower" style="--i: 5"><div class="sunflower"></div><div class="stem"></div></div>
-      <div class="flower" style="--i: 6"><div class="sunflower"></div><div class="stem"></div></div>
-      <div class="flower" style="--i: 7"><div class="sunflower"></div><div class="stem"></div></div>
-      <div class="flower" style="--i: 8"><div class="sunflower"></div><div class="stem"></div></div>
+      <div class="flower" style="--i: 1; --angle: -18deg; --stem-height: clamp(205px, 33vh, 320px)"><div class="sunflower"></div><div class="stem"></div></div>
+      <div class="flower" style="--i: 2; --angle: -12deg; --stem-height: clamp(220px, 36vh, 340px)"><div class="sunflower"></div><div class="stem"></div></div>
+      <div class="flower" style="--i: 3; --angle: -7deg; --stem-height: clamp(228px, 37vh, 350px)"><div class="sunflower"></div><div class="stem"></div></div>
+      <div class="flower" style="--i: 4; --angle: -3deg; --stem-height: clamp(240px, 38vh, 360px)"><div class="sunflower"></div><div class="stem"></div></div>
+      <div class="flower" style="--i: 5; --angle: 3deg; --stem-height: clamp(240px, 38vh, 360px)"><div class="sunflower"></div><div class="stem"></div></div>
+      <div class="flower" style="--i: 6; --angle: 8deg; --stem-height: clamp(228px, 37vh, 350px)"><div class="sunflower"></div><div class="stem"></div></div>
+      <div class="flower" style="--i: 7; --angle: 13deg; --stem-height: clamp(220px, 36vh, 340px)"><div class="sunflower"></div><div class="stem"></div></div>
+      <div class="flower" style="--i: 8; --angle: 19deg; --stem-height: clamp(205px, 33vh, 320px)"><div class="sunflower"></div><div class="stem"></div></div>
     </div>
   </section>
 
