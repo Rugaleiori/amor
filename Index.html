@@ -1,44 +1,241 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="DATOS/css/style.css">
-    <link rel="icon" href="DATOS/img/flowers.png" type="image/x-icon">
-    <title>FLORES</title>
-<style type="text/css">
-.grande { font-size: 60px; }
-</style>
-<script>
-// Escribir aqui el código Javascript
-</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Para la niña más hermosa</title>
+  <style>
+    :root {
+      --negro: #000;
+      --morado-oscuro: #2a0a42;
+      --verde-boton: #2dc653;
+      --petalo-amarillo: #ffd94d;
+      --texto: #fff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      min-height: 100vh;
+      overflow: hidden;
+      background: var(--negro);
+      color: var(--texto);
+    }
+
+    .screen {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.8s ease;
+    }
+
+    .intro {
+      background: var(--negro);
+      gap: 3rem;
+      z-index: 2;
+    }
+
+    .intro h1 {
+      font-size: clamp(1.8rem, 4vw, 3.5rem);
+      text-align: center;
+      letter-spacing: 1px;
+      text-transform: lowercase;
+    }
+
+    .start-btn {
+      border: none;
+      background: var(--verde-boton);
+      color: #043b0f;
+      font-weight: 700;
+      font-size: 1.4rem;
+      text-transform: lowercase;
+      width: 220px;
+      height: 72px;
+      border-radius: 14px;
+      cursor: pointer;
+      box-shadow: 0 10px 26px rgba(45, 198, 83, 0.35);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .start-btn:hover,
+    .start-btn:focus-visible {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 14px 26px rgba(45, 198, 83, 0.5);
+      outline: none;
+    }
+
+    .scene {
+      background: radial-gradient(circle at 50% 20%, #3a1360 0%, var(--morado-oscuro) 55%, #180327 100%);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 1;
+      justify-content: flex-end;
+      padding-bottom: 4vh;
+    }
+
+    .scene.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .intro.hide {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .bouquet {
+      position: relative;
+      width: min(92vw, 900px);
+      height: min(68vh, 560px);
+      transform: translateY(120%);
+      transition: transform 1.7s cubic-bezier(0.22, 1, 0.36, 1);
+      filter: drop-shadow(0 18px 10px rgba(0, 0, 0, 0.2));
+    }
+
+    .scene.active .bouquet {
+      transform: translateY(0);
+    }
+
+    .flower {
+      --angle: 0deg;
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      width: clamp(62px, 8vw, 92px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      transform-origin: bottom center;
+      transform: translateX(-50%) rotate(var(--angle));
+      animation: sway 3.6s ease-in-out infinite;
+      animation-delay: calc(var(--i) * -0.25s);
+    }
+
+    .stem {
+      width: 7px;
+      height: var(--stem-height, clamp(200px, 34vh, 320px));
+      background: linear-gradient(to bottom, #338445, #206030);
+      border-radius: 999px;
+      margin-top: -4px;
+    }
+
+    .sunflower {
+      width: clamp(62px, 8vw, 94px);
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      position: relative;
+      background: radial-gradient(circle, #4d3319 30%, #2f1d0d 56%, transparent 58%);
+      display: grid;
+      place-items: center;
+    }
+
+    .sunflower::before {
+      content: "";
+      position: absolute;
+      inset: -20px;
+      background: repeating-conic-gradient(from 0deg, #ffde59 0deg 12deg, #fcbf49 12deg 24deg);
+      border-radius: 50%;
+      -webkit-mask: radial-gradient(circle, transparent 34px, #000 35px);
+      mask: radial-gradient(circle, transparent 34px, #000 35px);
+    }
+
+    .petal-rain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .petal {
+      position: absolute;
+      top: -10vh;
+      width: 22px;
+      height: 32px;
+      border-radius: 65% 35% 70% 30% / 45% 65% 35% 55%;
+      background: radial-gradient(circle at 30% 25%, #fff2a8 0 28%, var(--petalo-amarillo) 50%, #eab308 100%);
+      opacity: 0;
+      animation: fall linear infinite;
+      animation-play-state: paused;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+    }
+
+    .scene.active .petal {
+      animation-play-state: running;
+      opacity: 0.9;
+    }
+
+    @keyframes sway {
+      0%,
+      100% { transform: translateX(-50%) rotate(calc(var(--angle) - 2.2deg)); }
+      50% { transform: translateX(-50%) rotate(calc(var(--angle) + 2.2deg)); }
+    }
+
+    @keyframes fall {
+      from {
+        transform: translate3d(var(--x), -15vh, 0) rotate(0deg);
+      }
+      to {
+        transform: translate3d(calc(var(--x) + var(--drift)), 110vh, 0) rotate(360deg);
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="greetings">
-        <span>M</span>
-        <span>I</span>
-        <span></span>
-        <span>N</span>
-        <span>I</span>
-        <span>Ñ</span>
-        <span>A</span>
-        <span></span>
-        <span>H</span>
-        <span>E</span>
-        <span>R</span>
-        <span>M</span>
-        <span>O</span>
-        <span>S</span>
-        <span>A</span>
+  <section class="screen intro" id="intro">
+    <h1>para la niña mas hermosa</h1>
+    <button class="start-btn" id="showScene">aqui</button>
+  </section>
+
+  <section class="screen scene" id="scene">
+    <div class="petal-rain" id="petalRain" aria-hidden="true"></div>
+    <div class="bouquet" id="bouquet" aria-label="Ramo de girasoles">
+      <div class="flower" style="--i: 1; --angle: -18deg; --stem-height: clamp(205px, 33vh, 320px)"><div class="sunflower"></div><div class="stem"></div></div>
+      <div class="flower" style="--i: 2; --angle: -12deg; --stem-height: clamp(220px, 36vh, 340px)"><div class="sunflower"></div><div class="stem"></div></div>
+      <div class="flower" style="--i: 3; --angle: -7deg; --stem-height: clamp(228px, 37vh, 350px)"><div class="sunflower"></div><div class="stem"></div></div>
+      <div class="flower" style="--i: 4; --angle: -3deg; --stem-height: clamp(240px, 38vh, 360px)"><div class="sunflower"></div><div class="stem"></div></div>
+      <div class="flower" style="--i: 5; --angle: 3deg; --stem-height: clamp(240px, 38vh, 360px)"><div class="sunflower"></div><div class="stem"></div></div>
+      <div class="flower" style="--i: 6; --angle: 8deg; --stem-height: clamp(228px, 37vh, 350px)"><div class="sunflower"></div><div class="stem"></div></div>
+      <div class="flower" style="--i: 7; --angle: 13deg; --stem-height: clamp(220px, 36vh, 340px)"><div class="sunflower"></div><div class="stem"></div></div>
+      <div class="flower" style="--i: 8; --angle: 19deg; --stem-height: clamp(205px, 33vh, 320px)"><div class="sunflower"></div><div class="stem"></div></div>
     </div>
-    <div class="description">
-        <span>TENGO UNA SORPRESA PARA TÍ !!!</span>
-    </div>
-    <div class="button">
-        <button>
-            <a href="DATOS/FLORES.html">CLICK AQUÍ</a>
-        </button>
-    </div>
+  </section>
+
+  <script>
+    const intro = document.getElementById('intro');
+    const scene = document.getElementById('scene');
+    const button = document.getElementById('showScene');
+    const petalRain = document.getElementById('petalRain');
+
+    function createPetals(total = 34) {
+      const fragment = document.createDocumentFragment();
+      for (let i = 0; i < total; i += 1) {
+        const petal = document.createElement('span');
+        petal.className = 'petal';
+        petal.style.left = `${Math.random() * 100}%`;
+        petal.style.setProperty('--x', `${Math.random() * 10 - 5}vw`);
+        petal.style.setProperty('--drift', `${Math.random() * 24 - 12}vw`);
+        petal.style.animationDuration = `${9 + Math.random() * 8}s`;
+        petal.style.animationDelay = `${Math.random() * -18}s`;
+        fragment.appendChild(petal);
+      }
+      petalRain.appendChild(fragment);
+    }
+
+    createPetals();
+
+    button.addEventListener('click', () => {
+      intro.classList.add('hide');
+      scene.classList.add('active');
+    });
+  </script>
 </body>
 </html>
